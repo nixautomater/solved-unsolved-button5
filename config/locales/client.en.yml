@@ -1,0 +1,17 @@
+en:
+  js:
+    mmn_solved_queue:
+      solved_btn:
+        title: "Solved"
+        label: "Solved"
+      unsolved_btn:
+        title: "Unsolved"
+        label: "Unsolved"
+      queue_btn:
+        solved: "Solved"
+        unsolved: "Unsolved"
+        reject: "Reject"
+        refresh: "Refresh"
+      menu:
+        solved: "Solved Queue"
+        unsolved: "Unsolved Queue"

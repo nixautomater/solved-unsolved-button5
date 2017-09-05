@@ -1,0 +1,25 @@
+$success: green;
+
+.btn-success {
+  color: $secondary;
+  font-weight: normal;
+  background: $success;
+  &[href] {
+    color: $secondary;
+  }
+  &:hover, &.btn-hover {
+    background: scale-color($success, $lightness: -20%);
+  }
+  &:active, &.btn-active {
+    @include linear-gradient(scale-color($success, $lightness: -20%), $success);
+  }
+  &[disabled], &.disabled {
+    background: $success;
+  }
+}
+
+.solvedqueue {
+  .read-state, .post-menu-area {
+    display: none !important;
+  }
+}

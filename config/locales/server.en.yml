@@ -1,0 +1,4 @@
+en:
+  site_settings:
+    solved_group_name_can_queue: "Allow this group to add topic to queue"
+    solved_group_name_can_process: "Allow this group to process queue"

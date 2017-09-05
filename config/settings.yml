@@ -1,0 +1,7 @@
+plugins:
+  solved_group_name_can_queue:
+    default: ""
+    client: true
+  solved_group_name_can_process:
+    default: ""
+    client: true
