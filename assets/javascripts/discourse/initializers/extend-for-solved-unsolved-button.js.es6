@@ -12,16 +12,16 @@ export default {
 
       if (currentUser) {
         ajax("/mmn_solved_queue/is_show_link").then(result => {
-          if (result.show_link) {
-            ["solved", "unsolved"].forEach(state => {
-              api.decorateWidget('hamburger-menu:generalLinks', () => {
-                return {
-                  href: `/solvedqueue?state=queue_${state}`,
-                  label: `mmn_solved_queue.menu.${state}`
-                };
-              });
+          ["solved", "unsolved"].filter(menu => {
+            return result[menu];
+          }).forEach(state => {
+            api.decorateWidget('hamburger-menu:generalLinks', () => {
+              return {
+                href: `/solvedqueue?state=${state}`,
+                label: `mmn_solved_queue.menu.${state}`
+              };
             });
-          }
+          });
         });
       }
     });

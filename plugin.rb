@@ -1,6 +1,6 @@
 # name: discourse-solved-unsolved-button
 # about: Add solved and unsolved button to topic on Discourse
-# version: 0.1
+# version: 0.2
 # authors: Muhlis Budi Cahyono (muhlisbc@gmail.com)
 # url: http://git.dev.abylina.com/momon/discourse-solved-unsolved-button
 
@@ -21,38 +21,48 @@ after_initialize {
 
     def list
       state       = params["state"]
-      topic_ids   = TopicCustomField.where(name: "solved_state", value: state).pluck(:topic_id)
+      guardian.ensure_mmn_process_crit!(state)
+
+      topic_ids   = TopicCustomField.where(name: "mmn_#{state}_queue_state", value: "t").pluck(:topic_id)
       topics      = Topic.where(id: topic_ids).includes(:user).references(:user)
       render_json_dump(serialize_data(topics, TopicListItemSerializer, scope: guardian, root: false))
     end
 
-    def set_state
-      topic = Topic.find(params[:id].to_i)
-      state = params["state"]
+    def solved
+      set_state("solved")
+    end
 
-      if ["pending_solved", "pending_unsolved"].include?(state)
-        guardian.ensure_mmn_solved_can_queue!(topic)
-      elsif ["solved", "unsolved"].include?(state)
-        guardian.ensure_mmn_solved_can_process!(topic)
-      else
-        guardian.ensure_mmn_solved_can_reset!(topic)
-      end
-
-      topic.custom_fields["solved_state"] = state
-      topic.save!
-
-      render json: {state: state}
+    def unsolved
+      set_state("unsolved")
     end
 
     def is_show_link
-      render json: {show_link: current_user.groups.pluck(:name).include?(SiteSetting.solved_group_name_can_process)}
+      groups = current_user.groups.pluck(:name)
+      render json: {
+        solved: groups.include?(SiteSetting.solved_group_name_can_process_solved),
+        unsolved: groups.include?(SiteSetting.solved_group_name_can_process_unsolved)
+      }
+    end
+
+    private
+
+    def set_state(button)
+      topic = Topic.find(params[:id].to_i)
+
+      guardian.ensure_mmn_queue_crit!(topic, button)
+
+      states = ["solved_state", "mmn_button_#{button}_state", "mmn_#{button}_queue_state"]
+      topic.custom_fields.merge!(params.slice(states))
+      topic.save
+      render json: topic.custom_fields.slice(states)
     end
 
   end
 
   MmnSolvedQueue::Engine.routes.draw do
     get "/list"           => "solved#list"
-    post "/set_state"     => "solved#set_state"
+    post "/solved"        => "solved#solved"
+    post "/unsolved"      => "solved#unsolved"
     get "/is_show_link"   => "solved#is_show_link"
   end
 
@@ -63,28 +73,36 @@ after_initialize {
   # guardian
   class ::Guardian
 
-    def mmn_solved_can_queue?(topic)
-      mmn_can_solve?(topic) && mmn_queue_crit(topic)
+    # def mmn_solved_can_queue_solved?(topic)
+    #   mmn_can_solve?(topic) && mmn_queue_crit(topic, "solved")
+    # end
+
+    # def mmn_solved_can_queue_unsolved?(topic)
+    #   mmn_can_solve?(topic) && mmn_queue_crit(topic, "unsolved")
+    # end
+
+    # def mmn_solved_can_queue?(topic)
+    #   mmn_can_solve?(topic) && mmn_queue_crit(topic)
+    # end
+
+    # def mmn_solved_can_process?(topic)
+    #   mmn_can_solve?(topic) && mmn_process_crit
+    # end
+
+    # def mmn_solved_can_reset?(topic)
+    #   mmn_can_solve?(topic) && (mmn_process_crit || mmn_queue_crit(topic))
+    # end
+
+    # def mmn_can_solve?(topic)
+    #   allow_accepted_answers_on_category?(topic.category_id) && authenticated?
+    # end
+
+    def mmn_queue_crit?(topic, group)
+      allow_accepted_answers_on_category?(topic.category_id) && authenticated? && !topic.closed? && (mmn_is_op?(topic.user_id) || mmn_group_member?(SiteSetting.call("solved_group_name_can_queue_#{group}")))
     end
 
-    def mmn_solved_can_process?(topic)
-      mmn_can_solve?(topic) && mmn_process_crit
-    end
-
-    def mmn_solved_can_reset?(topic)
-      mmn_can_solve?(topic) && (mmn_process_crit || mmn_queue_crit(topic))
-    end
-
-    def mmn_can_solve?(topic)
-      allow_accepted_answers_on_category?(topic.category_id) && authenticated?
-    end
-
-    def mmn_queue_crit(topic)
-      !topic.closed? && (mmn_is_op?(topic.user_id) || mmn_group_member?(SiteSetting.solved_group_name_can_queue))
-    end
-
-    def mmn_process_crit
-      mmn_group_member?(SiteSetting.solved_group_name_can_process)
+    def mmn_process_crit?(state)
+      authenticated? && mmn_group_member?(SiteSetting.call("solved_group_name_can_process_#{state}"))
     end
 
     def mmn_is_op?(topic_user_id)
@@ -101,14 +119,24 @@ after_initialize {
   # serializers
   require_dependency 'topic_view_serializer'
   class ::TopicViewSerializer
-    attributes :solved_state, :solved_can_queue, :solved_show_button
+    attributes :solved_state, :mmn_buttons, :solved_show_button
 
     def solved_state
       object.topic.custom_fields["solved_state"]
     end
 
-    def solved_can_queue
-      scope.mmn_solved_can_queue?(object.topic)
+    def mmn_buttons
+      {
+        solved: button_state("solved"),
+        unsolved: button_state("unsolved")
+      }
+    end
+
+    def button_state(button)
+      {
+        pressed: object.topic.custom_fields["mmn_button_#{button}_state"],
+        can_click: scope.mmn_queue_crit?(object.topic, button)
+      }
     end
 
     def solved_show_button
@@ -119,7 +147,7 @@ after_initialize {
   module ::MmnSolvedCustomHelper
     def self.included(base)
       base.class_eval {
-        attributes :solved_state, :solved_can_process, :user
+        attributes :solved_state, :user
 
         def solved_state
           object.custom_fields["solved_state"]
@@ -127,10 +155,6 @@ after_initialize {
 
         def user
           object.user ? object.user.slice(:username, :id, :avatar_template, :name) : {}
-        end
-
-        def solved_can_process
-          scope.mmn_solved_can_process?(object)
         end
       }
     end
