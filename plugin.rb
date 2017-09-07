@@ -51,10 +51,11 @@ after_initialize {
 
       guardian.ensure_mmn_queue_crit!(topic, button)
 
-      states = ["solved_state", "mmn_button_#{button}_state", "mmn_#{button}_queue_state"]
-      topic.custom_fields.merge!(params.slice(states))
+      ["solved_state", "mmn_button_#{button}_state", "mmn_#{button}_queue_state"].each do |f|
+        topic.custom_fields[f] = params[f]
+      end
       topic.save
-      render json: topic.custom_fields.slice(states)
+      render json: topic.custom_fields
     end
 
   end
