@@ -8,7 +8,7 @@ function solvedButton(component) {
 
   const solvedState   = topic.get("solved_state");
   const answerCount   = topic.get("accepted_answers") ? topic.get("accepted_answers").length : 0;
-  const pressed       = button.get("pressed");
+  const pressed       = button.pressed;
 
   let newState, buttonState, queueState;
 
@@ -89,7 +89,7 @@ function unsolvedButton(component) {
   if (!button.get("can_click")) { return; }
 
   const solvedState   = topic.get("solved_state");
-  const pressed       = button.get("pressed");
+  const pressed       = button.pressed;
 
   let newState, buttonState, queueState;
 
@@ -170,8 +170,8 @@ function unsolvedButton(component) {
 
 function setClasses(topic, component) {
   const buttons       = topic.get("mmn_buttons");
-  const solvedClass   = buttons.get("solved.pressed") == "t" ? "btn-success" : "";
-  const unsolvedClass = buttons.get("unsolved.pressed") == "t" ? "btn-danger" : "";
+  const solvedClass   = buttons.solved.pressed == "t" ? "btn-success" : "";
+  const unsolvedClass = buttons.unsolved.pressed == "t" ? "btn-danger" : "";
   component.set("solvedClass", solvedClass);
   component.set("unsolvedClass", unsolvedClass);
 }
