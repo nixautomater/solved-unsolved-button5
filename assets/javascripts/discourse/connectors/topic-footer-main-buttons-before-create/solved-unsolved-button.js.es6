@@ -15,7 +15,7 @@ function solvedButton(component) {
 
   let newState, buttonState, queueState;
 
-  if (!solvedState && answerCount == 0 && !pressed) {
+  if (solvedState == "solved" && answerCount == 0 && pressed != "t") {
     // Current Topic state: unsolved
     // Number of solutions in the topic: 0
     // Current state of button: not pressed
@@ -40,7 +40,7 @@ function solvedButton(component) {
     newState      = null;
     buttonState   = null;
     queueState    = null;
-  } else if (solvedState == "solved" && answerCount > 0 && !pressed) {
+  } else if (solvedState == "solved" && answerCount > 0 && pressed == "t") {
     // SOLVED button
     // Current Topic state: Solved
     // Number of solutions in the topic: More than 0
@@ -103,7 +103,7 @@ function unsolvedButton(component) {
 
   let newState, buttonState, queueState;
 
-  if (!solvedState && !pressed) {
+  if (solvedState != "solved" && pressed != "t") {
     // UN-SOLVED button
     // Current Topic state: un-solved
     // Current state of button: not-pressed
@@ -115,7 +115,7 @@ function unsolvedButton(component) {
     newState      = null;
     buttonState   = "t";
     queueState    = "t";
-  } else if (!solvedState && pressed == "t") {
+  } else if (solvedState != "solved" && pressed == "t") {
     // UN-SOLVED button
     // Current Topic state: un-solved
     // Current state of button: pressed
@@ -127,7 +127,7 @@ function unsolvedButton(component) {
     newState      = null;
     buttonState   = null;
     queueState    = null;
-  } else if (solvedState == "solved" && !pressed) {
+  } else if (solvedState == "solved" && pressed != "t") {
     // UN-SOLVED button
     // Current Topic state: solved
     // Current state of button: not-pressed
