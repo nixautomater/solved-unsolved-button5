@@ -4,11 +4,14 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 function solvedButton(component) {
   const {topic} = component.args;
   const button = topic.get("mmn_buttons.solved");
+  console.log(`solved.can_click: ${button.can_click}`);
   if (!button.can_click) { return; }
 
   const solvedState   = topic.get("solved_state");
   const answerCount   = topic.get("accepted_answers") ? topic.get("accepted_answers").length : 0;
   const pressed       = button.pressed;
+
+  console.log({solvedState, answerCount, pressed});
 
   let newState, buttonState, queueState;
 
@@ -20,6 +23,7 @@ function solvedButton(component) {
     // New state of topic: solved
     // AND: topic should be sent to the “Solved-queue”
 
+    console.log("criteria 1");
     newState      = "solved";
     buttonState   = "t";
     queueState    = "t";
@@ -32,6 +36,7 @@ function solvedButton(component) {
     // New state of topic: Un-Solved
     // AND: topic should NOT be there in the “solved-queue”
 
+    console.log("criteria 2");
     newState      = null;
     buttonState   = null;
     queueState    = null;
@@ -44,6 +49,7 @@ function solvedButton(component) {
     // New state of topic: Solved
     // AND: topic should NOT be there in the “solved-queue”
 
+    console.log("criteria 3");
     newState      = "solved";
     buttonState   = "t";
     queueState    = null;
@@ -56,6 +62,7 @@ function solvedButton(component) {
     // New state of topic: Solved
     // AND: topic should NOT be there in the “solved-queue”
 
+    console.log("criteria 4");
     newState      = "solved";
     buttonState   = null;
     queueState    = null;
@@ -86,10 +93,13 @@ function solvedButton(component) {
 function unsolvedButton(component) {
   const {topic} = component.args;
   const button = topic.get("mmn_buttons.unsolved");
+  console.log(`unsolved.can_click: ${button.can_click}`);
   if (!button.can_click) { return; }
 
   const solvedState   = topic.get("solved_state");
   const pressed       = button.pressed;
+
+  console.log({solvedState, pressed});
 
   let newState, buttonState, queueState;
 
@@ -101,6 +111,7 @@ function unsolvedButton(component) {
     // New state of topic: un-solved
     // AND: topic should be sent to the “Un-Solved-queue”
 
+    console.log("criteria 1");
     newState      = null;
     buttonState   = "t";
     queueState    = "t";
@@ -112,6 +123,7 @@ function unsolvedButton(component) {
     // New state of topic: un-solved
     // AND: topic should NOT be there in “Un-Solved-queue”
 
+    console.log("criteria 2");
     newState      = null;
     buttonState   = null;
     queueState    = null;
@@ -123,6 +135,7 @@ function unsolvedButton(component) {
     // New state of topic: un-solved
     // AND: topic should be sent to “Un-Solved-queue”
 
+    console.log("criteria 3");
     newState      = null;
     buttonState   = "t";
     queueState    = "t";
