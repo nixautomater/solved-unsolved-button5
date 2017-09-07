@@ -15,7 +15,7 @@ function solvedButton(component) {
 
   let newState, buttonState, queueState;
 
-  if (solvedState == "solved" && answerCount == 0 && pressed != "t") {
+  if (solvedState != "solved" && answerCount == 0 && pressed != "t") {
     // Current Topic state: unsolved
     // Number of solutions in the topic: 0
     // Current state of button: not pressed
