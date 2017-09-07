@@ -159,7 +159,37 @@ after_initialize {
         end
       }
     end
+
+    def self.topic_custom_query(is_not = "")
+      "topics.id #{is_not} IN (SELECT tc.topic_id FROM topic_custom_fields tc WHERE tc.name = 'solved_state' AND tc.value IS 'solved')"
+    end
   end
+
+  require_dependency 'search'
+
+  if Search.respond_to? :advanced_filter
+    Search.advanced_filter(/in:solved/) do |posts|
+      posts.where(::MmnSolvedCustomHelper.topic_custom_query)
+    end
+
+    Search.advanced_filter(/in:unsolved/) do |posts|
+      posts.where(::MmnSolvedCustomHelper.topic_custom_query("NOT"))
+    end
+  end
+
+  if Discourse.has_needed_version?(Discourse::VERSION::STRING, '1.8.0.beta6')
+    require_dependency 'topic_query'
+
+    TopicQuery.add_custom_filter(:solved) do |results, topic_query|
+      if topic_query.options[:solved] == 'yes'
+        results = results.where(::MmnSolvedCustomHelper.topic_custom_query)
+      elsif topic_query.options[:solved] == 'no'
+        results = results.where(::MmnSolvedCustomHelper.topic_custom_query("NOT"))
+      end
+      results
+    end
+  end
+
 
   require_dependency 'topic_list_item_serializer'
   require_dependency 'listable_topic_serializer'

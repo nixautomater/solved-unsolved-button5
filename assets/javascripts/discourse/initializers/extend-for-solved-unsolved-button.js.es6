@@ -7,6 +7,28 @@ export default {
     const ss = c.lookup('site-settings:main');
     if (!ss.solved_enabled) { return; }
 
+    TopicStatus.reopen({
+      statuses: function(){
+        const results = this._super();
+        if (this.topic.solved_state == "solved") {
+          results.push({
+            openTag: 'span',
+            closeTag: 'span',
+            title: I18n.t('solved.has_accepted_answers'),
+            icon: 'check-square-o'
+          });
+        } else if(this.topic.can_have_answer && this.siteSettings.solved_enabled && this.siteSettings.empty_box_on_unsolved){
+          results.push({
+            openTag: 'span',
+            closeTag: 'span',
+            title: I18n.t('solved.has_no_accepted_answers'),
+            icon: 'square-o'
+          });
+        }
+        return results;
+      }.property()
+    });
+
     withPluginApi('0.1', api => {
       const currentUser = api.getCurrentUser();
 
