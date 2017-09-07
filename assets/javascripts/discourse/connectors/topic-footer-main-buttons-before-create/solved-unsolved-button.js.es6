@@ -4,7 +4,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 function solvedButton(component) {
   const {topic} = component.args;
   const button = topic.get("mmn_buttons.solved");
-  if (!button.get("can_click")) { return; }
+  if (!button.can_click) { return; }
 
   const solvedState   = topic.get("solved_state");
   const answerCount   = topic.get("accepted_answers") ? topic.get("accepted_answers").length : 0;
@@ -86,7 +86,7 @@ function solvedButton(component) {
 function unsolvedButton(component) {
   const {topic} = component.args;
   const button = topic.get("mmn_buttons.unsolved");
-  if (!button.get("can_click")) { return; }
+  if (!button.can_click) { return; }
 
   const solvedState   = topic.get("solved_state");
   const pressed       = button.pressed;
