@@ -1,5 +1,6 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
 import { ajax } from 'discourse/lib/ajax';
+import TopicStatus from 'discourse/raw-views/topic-status';
 
 export default {
   name: 'mmn_solved_unsolved_button',
