@@ -61,7 +61,7 @@ function solvedButton(component) {
   // New state of topic: Solved
   // AND: topic should NOT be there in the “solved-queue”
 
-  else if (solvedState == "solved" && answerCount > 0 && pressed = "t") {
+  else if (solvedState == "solved" && answerCount > 0 && pressed == "t") {
     newState      = "solved";
     buttonState   = null;
     queueState    = null;
