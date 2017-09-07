@@ -1,23 +1,21 @@
 <div class="solvedqueue">
   {{#each cookedTopics as |topic|}}
-    {{#if topic.solved_can_process}}
-      <div class="clearfix regular topic-post">
-        <article class="boxed onscreen-post">
-          <a href="" class="tabLoc"></a>
-          <div class="row">
-            {{mount-widget widget="post-avatar" args=topic.user}}
-            <div class="topic-body clearfix">
-              {{mount-widget widget="post-meta-data" args=topic.user}}
-              <div class="regular contents">
-                <div class="solved-topic-title">
-                  <a href="{{topic.shareUrl}}" target="_blank" class="post-link">{{topic.title}}</a>
-                </div>
+    <div class="clearfix regular topic-post">
+      <article class="boxed onscreen-post">
+        <a href="" class="tabLoc"></a>
+        <div class="row">
+          {{mount-widget widget="post-avatar" args=topic.user}}
+          <div class="topic-body clearfix">
+            {{mount-widget widget="post-meta-data" args=topic.user}}
+            <div class="regular contents">
+              <div class="solved-topic-title">
+                <a href="{{topic.shareUrl}}" target="_blank" class="post-link">{{topic.title}}</a>
               </div>
             </div>
           </div>
-        </article>
-      </div>
-    {{/if}}
+        </div>
+      </article>
+    </div>
   {{/each}}
   <div style="margin-top: 20px">
     {{d-button action="refresh" icon="refresh" label="mmn_solved_queue.queue_btn.refresh" disabled=performingAction}}
