@@ -161,7 +161,7 @@ after_initialize {
     end
 
     def self.topic_custom_query(is_not = "")
-      "topics.id #{is_not} IN (SELECT tc.topic_id FROM topic_custom_fields tc WHERE tc.name = 'solved_state' AND tc.value IS 'solved')"
+      "topics.id #{is_not} IN (SELECT tc.topic_id FROM topic_custom_fields tc WHERE tc.name = 'solved_state' AND tc.value = 'solved')"
     end
   end
 
