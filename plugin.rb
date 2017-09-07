@@ -98,11 +98,11 @@ after_initialize {
     # end
 
     def mmn_queue_crit?(topic, group)
-      allow_accepted_answers_on_category?(topic.category_id) && authenticated? && !topic.closed? && (mmn_is_op?(topic.user_id) || mmn_group_member?(SiteSetting.call("solved_group_name_can_queue_#{group}")))
+      allow_accepted_answers_on_category?(topic.category_id) && authenticated? && !topic.closed? && (mmn_is_op?(topic.user_id) || mmn_group_member?(SiteSetting.send("solved_group_name_can_queue_#{group}")))
     end
 
     def mmn_process_crit?(state)
-      authenticated? && mmn_group_member?(SiteSetting.call("solved_group_name_can_process_#{state}"))
+      authenticated? && mmn_group_member?(SiteSetting.send("solved_group_name_can_process_#{state}"))
     end
 
     def mmn_is_op?(topic_user_id)
