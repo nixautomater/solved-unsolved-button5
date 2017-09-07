@@ -33,7 +33,7 @@ function solvedButton(component) {
   // New state of topic: Un-Solved
   // AND: topic should NOT be there in the “solved-queue”
 
-  else if (solvedState = "solved" && answerCount == 0 && pressed == "t") {
+  else if (solvedState == "solved" && answerCount == 0 && pressed == "t") {
     newState      = null;
     buttonState   = null;
     queueState    = null;
@@ -47,7 +47,7 @@ function solvedButton(component) {
   // New state of topic: Solved
   // AND: topic should NOT be there in the “solved-queue”
 
-  else if (solvedState = "solved" && answerCount > 0 && !pressed) {
+  else if (solvedState == "solved" && answerCount > 0 && !pressed) {
     newState      = "solved";
     buttonState   = "t";
     queueState    = null;
@@ -61,7 +61,7 @@ function solvedButton(component) {
   // New state of topic: Solved
   // AND: topic should NOT be there in the “solved-queue”
 
-  else if (solvedState = "solved" && answerCount > 0 && pressed = "t") {
+  else if (solvedState == "solved" && answerCount > 0 && pressed = "t") {
     newState      = "solved";
     buttonState   = null;
     queueState    = null;
@@ -135,7 +135,7 @@ function unsolvedButton(component) {
   // AND: topic should be sent to “Un-Solved-queue”
 
 
-  if (solvedState = "solved" && !pressed) {
+  if (solvedState == "solved" && !pressed) {
     newState      = null;
     buttonState   = "t";
     queueState    = "t";
