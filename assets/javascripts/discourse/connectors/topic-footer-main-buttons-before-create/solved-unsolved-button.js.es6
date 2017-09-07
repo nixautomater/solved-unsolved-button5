@@ -40,7 +40,7 @@ function solvedButton(component) {
     newState      = null;
     buttonState   = null;
     queueState    = null;
-  } else if (solvedState == "solved" && answerCount > 0 && pressed == "t") {
+  } else if (solvedState == "solved" && answerCount > 0 && pressed != "t") {
     // SOLVED button
     // Current Topic state: Solved
     // Number of solutions in the topic: More than 0
