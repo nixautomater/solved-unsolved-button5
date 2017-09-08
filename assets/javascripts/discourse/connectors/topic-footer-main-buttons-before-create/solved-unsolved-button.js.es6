@@ -75,7 +75,8 @@ function solvedButton(component) {
   topic.set("solved_state", newState);
   topic.set("mmn_buttons.active", buttonState);
 
-  component.set("solvedClass", (buttonState == "solved" ? "btn-success" : ""));
+  //component.set("solvedClass", (buttonState == "solved" ? "btn-success" : ""));
+  setClasses(topic, component);
 
   ajax("/mmn_solved_queue/solved.json", {
     type: "POST",
@@ -148,7 +149,8 @@ function unsolvedButton(component) {
   topic.set("solved_state", newState);
   topic.set("mmn_buttons.active", buttonState);
 
-  component.set("unsolvedClass", (buttonState == "unsolved" ? "btn-danger" : ""));
+  //component.set("unsolvedClass", (buttonState == "unsolved" ? "btn-danger" : ""));
+  setClasses(topic, component);
 
   ajax("/mmn_solved_queue/unsolved.json", {
     type: "POST",
