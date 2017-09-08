@@ -15,7 +15,7 @@ function solvedButton(component) {
 
   let newState, buttonState, queueState;
 
-  if (solvedState != "solved" && answerCount == 0 && activeButton != "solved") {
+  if (solvedState == "unsolved" && answerCount == 0 && activeButton != "solved") {
     // Current Topic state: unsolved
     // Number of solutions in the topic: 0
     // Current state of button: not pressed
@@ -37,7 +37,7 @@ function solvedButton(component) {
     // AND: topic should NOT be there in the “solved-queue”
 
     console.log("criteria 2");
-    newState      = null;
+    newState      = "unsolved";
     buttonState   = null;
     queueState    = null;
   } else if (solvedState == "solved" && answerCount > 0 && activeButton != "solved") {
@@ -113,7 +113,7 @@ function unsolvedButton(component) {
     // AND: topic should be sent to the “Un-Solved-queue”
 
     console.log("criteria 1");
-    newState      = null;
+    newState      = "unsolved";
     buttonState   = "unsolved";
     queueState    = "t";
   } else if (solvedState != "solved" && activeButton == "unsolved") {
@@ -125,7 +125,7 @@ function unsolvedButton(component) {
     // AND: topic should NOT be there in “Un-Solved-queue”
 
     console.log("criteria 2");
-    newState      = null;
+    newState      = "unsolved";
     buttonState   = null;
     queueState    = null;
   } else if (solvedState == "solved" && activeButton != "unsolved") {
@@ -137,7 +137,7 @@ function unsolvedButton(component) {
     // AND: topic should be sent to “Un-Solved-queue”
 
     console.log("criteria 3");
-    newState      = null;
+    newState      = "unsolved";
     buttonState   = "unsolved";
     queueState    = "t";
   } else {
