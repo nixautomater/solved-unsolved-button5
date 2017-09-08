@@ -9,13 +9,13 @@ function solvedButton(component) {
 
   const solvedState   = topic.get("solved_state");
   const answerCount   = topic.get("accepted_answers") ? topic.get("accepted_answers").length : 0;
-  const pressed       = button.pressed;
+  const activeButton  = topic.get("mmn_buttons.active");
 
-  console.log({solvedState, answerCount, pressed});
+  console.log({solvedState, answerCount, activeButton});
 
   let newState, buttonState, queueState;
 
-  if (solvedState != "solved" && answerCount == 0 && pressed != "t") {
+  if (solvedState != "solved" && answerCount == 0 && activeButton != "solved") {
     // Current Topic state: unsolved
     // Number of solutions in the topic: 0
     // Current state of button: not pressed
@@ -25,9 +25,9 @@ function solvedButton(component) {
 
     console.log("criteria 1");
     newState      = "solved";
-    buttonState   = "t";
+    buttonState   = "solved";
     queueState    = "t";
-  } else if (solvedState == "solved" && answerCount == 0 && pressed == "t") {
+  } else if (solvedState == "solved" && answerCount == 0 && activeButton == "solved") {
     // SOLVED button
     // Current Topic state: Solved
     // Number of solutions in the topic: 0
@@ -40,7 +40,7 @@ function solvedButton(component) {
     newState      = null;
     buttonState   = null;
     queueState    = null;
-  } else if (solvedState == "solved" && answerCount > 0 && pressed != "t") {
+  } else if (solvedState == "solved" && answerCount > 0 && activeButton != "solved") {
     // SOLVED button
     // Current Topic state: Solved
     // Number of solutions in the topic: More than 0
@@ -51,9 +51,9 @@ function solvedButton(component) {
 
     console.log("criteria 3");
     newState      = "solved";
-    buttonState   = "t";
+    buttonState   = "solved";
     queueState    = null;
-  } else if (solvedState == "solved" && answerCount > 0 && pressed == "t") {
+  } else if (solvedState == "solved" && answerCount > 0 && activeButton == "solved") {
     // SOLVED button
     // Current Topic state: Solved
     // Number of solutions in the topic: More than 0
@@ -73,16 +73,16 @@ function solvedButton(component) {
   }
 
   topic.set("solved_state", newState);
-  topic.set("mmn_buttons.solved.pressed", buttonState);
+  topic.set("mmn_buttons.active", buttonState);
 
-  component.set("solvedClass", (buttonState == "t" ? "btn-success" : ""));
+  component.set("solvedClass", (buttonState == "solved" ? "btn-success" : ""));
 
   ajax("/mmn_solved_queue/solved.json", {
     type: "POST",
     data: {
       id: topic.get("id"),
       solved_state: newState,
-      mmn_button_solved_state: buttonState,
+      mmn_button_active: buttonState,
       mmn_solved_queue_state: queueState
     }
   }).catch(popupAjaxError);
@@ -97,13 +97,13 @@ function unsolvedButton(component) {
   if (!button.can_click) { return; }
 
   const solvedState   = topic.get("solved_state");
-  const pressed       = button.pressed;
+  const activeButton  = topic.get("mmn_buttons.active");
 
-  console.log({solvedState, pressed});
+  console.log({solvedState, activeButton});
 
   let newState, buttonState, queueState;
 
-  if (solvedState != "solved" && pressed != "t") {
+  if (solvedState != "solved" && activeButton != "unsolved") {
     // UN-SOLVED button
     // Current Topic state: un-solved
     // Current state of button: not-pressed
@@ -113,9 +113,9 @@ function unsolvedButton(component) {
 
     console.log("criteria 1");
     newState      = null;
-    buttonState   = "t";
+    buttonState   = "unsolved";
     queueState    = "t";
-  } else if (solvedState != "solved" && pressed == "t") {
+  } else if (solvedState != "solved" && activeButton == "unsolved") {
     // UN-SOLVED button
     // Current Topic state: un-solved
     // Current state of button: pressed
@@ -127,7 +127,7 @@ function unsolvedButton(component) {
     newState      = null;
     buttonState   = null;
     queueState    = null;
-  } else if (solvedState == "solved" && pressed != "t") {
+  } else if (solvedState == "solved" && activeButton != "unsolved") {
     // UN-SOLVED button
     // Current Topic state: solved
     // Current state of button: not-pressed
@@ -137,7 +137,7 @@ function unsolvedButton(component) {
 
     console.log("criteria 3");
     newState      = null;
-    buttonState   = "t";
+    buttonState   = "unsolved";
     queueState    = "t";
   } else {
     // If doesn't meet any criteria
@@ -146,16 +146,16 @@ function unsolvedButton(component) {
   }
 
   topic.set("solved_state", newState);
-  topic.set("mmn_buttons.unsolved.pressed", buttonState);
+  topic.set("mmn_buttons.active", buttonState);
 
-  component.set("unsolvedClass", (buttonState == "t" ? "btn-danger" : ""));
+  component.set("unsolvedClass", (buttonState == "unsolved" ? "btn-danger" : ""));
 
   ajax("/mmn_solved_queue/unsolved.json", {
     type: "POST",
     data: {
       id: topic.get("id"),
       solved_state: newState,
-      mmn_button_unsolved_state: buttonState,
+      mmn_button_active: buttonState,
       mmn_unsolved_queue_state: queueState
     }
   }).catch(popupAjaxError);
@@ -182,9 +182,9 @@ function unsolvedButton(component) {
 // }
 
 function setClasses(topic, component) {
-  const buttons       = topic.get("mmn_buttons");
-  const solvedClass   = buttons.solved.pressed == "t" ? "btn-success" : "";
-  const unsolvedClass = buttons.unsolved.pressed == "t" ? "btn-danger" : "";
+  const button        = topic.get("mmn_buttons.active");
+  const solvedClass   = button == "solved" ? "btn-success" : "";
+  const unsolvedClass = button == "unsolved" ? "btn-danger" : "";
   component.set("solvedClass", solvedClass);
   component.set("unsolvedClass", unsolvedClass);
 }

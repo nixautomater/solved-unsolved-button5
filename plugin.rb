@@ -1,6 +1,6 @@
 # name: discourse-solved-unsolved-button
 # about: Add solved and unsolved button to topic on Discourse
-# version: 0.2
+# version: 0.3
 # authors: Muhlis Budi Cahyono (muhlisbc@gmail.com)
 # url: http://git.dev.abylina.com/momon/discourse-solved-unsolved-button
 
@@ -51,7 +51,7 @@ after_initialize {
 
       guardian.ensure_mmn_queue_crit!(topic, button)
 
-      ["solved_state", "mmn_button_#{button}_state", "mmn_#{button}_queue_state"].each do |f|
+      ["solved_state", "mmn_button_active", "mmn_#{button}_queue_state"].each do |f|
         topic.custom_fields[f] = params[f]
       end
       topic.save
@@ -73,30 +73,6 @@ after_initialize {
 
   # guardian
   class ::Guardian
-
-    # def mmn_solved_can_queue_solved?(topic)
-    #   mmn_can_solve?(topic) && mmn_queue_crit(topic, "solved")
-    # end
-
-    # def mmn_solved_can_queue_unsolved?(topic)
-    #   mmn_can_solve?(topic) && mmn_queue_crit(topic, "unsolved")
-    # end
-
-    # def mmn_solved_can_queue?(topic)
-    #   mmn_can_solve?(topic) && mmn_queue_crit(topic)
-    # end
-
-    # def mmn_solved_can_process?(topic)
-    #   mmn_can_solve?(topic) && mmn_process_crit
-    # end
-
-    # def mmn_solved_can_reset?(topic)
-    #   mmn_can_solve?(topic) && (mmn_process_crit || mmn_queue_crit(topic))
-    # end
-
-    # def mmn_can_solve?(topic)
-    #   allow_accepted_answers_on_category?(topic.category_id) && authenticated?
-    # end
 
     def mmn_queue_crit?(topic, group)
       allow_accepted_answers_on_category?(topic.category_id) && authenticated? && !topic.closed? && (mmn_is_op?(topic.user_id) || mmn_group_member?(SiteSetting.send("solved_group_name_can_queue_#{group}")))
@@ -129,13 +105,14 @@ after_initialize {
     def mmn_buttons
       {
         solved: button_state("solved"),
-        unsolved: button_state("unsolved")
+        unsolved: button_state("unsolved"),
+        active: object.topic.custom_fields["mmn_button_active"]
       }
     end
 
     def button_state(button)
       {
-        pressed: object.topic.custom_fields["mmn_button_#{button}_state"],
+        #pressed: object.topic.custom_fields["mmn_button_#{button}_state"],
         can_click: scope.mmn_queue_crit?(object.topic, button)
       }
     end
