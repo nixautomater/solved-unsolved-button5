@@ -99,7 +99,13 @@ after_initialize {
     attributes :solved_state, :mmn_buttons, :solved_show_button
 
     def solved_state
-      object.topic.custom_fields["solved_state"]
+      #object.topic.custom_fields["solved_state"]
+      s_state = object.topic.custom_fields["solved_state"]
+      if s_state.blank?
+        object.topic.custom_fields["accepted_answer_post_ids"].blank? ? "unsolved" : "solved"
+      else
+        s_state
+      end
     end
 
     def mmn_buttons
@@ -128,7 +134,12 @@ after_initialize {
         attributes :solved_state, :user
 
         def solved_state
-          object.custom_fields["solved_state"]
+          s_state = object.custom_fields["solved_state"]
+          if s_state.blank?
+            object.custom_fields["accepted_answer_post_ids"].blank? ? "unsolved" : "solved"
+          else
+            s_state
+          end
         end
 
         def user
