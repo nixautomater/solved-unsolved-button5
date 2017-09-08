@@ -171,15 +171,7 @@ after_initialize {
 
     TopicQuery.add_custom_filter(:solved) do |results, topic_query|
       if topic_query.options[:solved] == 'yes'
-        #results = results.where(::MmnSolvedCustomHelper.topic_custom_query)
-        results = results.all.select do |t|
-          s_state = t.custom_fields["solved_state"]
-          if s_state.blank?
-            !t.custom_fields["accepted_answer_post_ids"].blank?
-          else
-            s_state == "solved"
-          end
-        end
+        results = results.where(::MmnSolvedCustomHelper.topic_custom_query)
       elsif topic_query.options[:solved] == 'no'
         results = results.where(::MmnSolvedCustomHelper.topic_custom_query("NOT"))
       end
