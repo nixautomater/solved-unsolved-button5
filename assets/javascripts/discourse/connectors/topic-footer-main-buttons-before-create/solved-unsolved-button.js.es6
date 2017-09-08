@@ -104,7 +104,7 @@ function unsolvedButton(component) {
 
   let newState, buttonState, queueState;
 
-  if (solvedState != "solved" && activeButton != "unsolved") {
+  if (solvedState == "unsolved" && activeButton != "unsolved") {
     // UN-SOLVED button
     // Current Topic state: un-solved
     // Current state of button: not-pressed
@@ -116,7 +116,7 @@ function unsolvedButton(component) {
     newState      = "unsolved";
     buttonState   = "unsolved";
     queueState    = "t";
-  } else if (solvedState != "solved" && activeButton == "unsolved") {
+  } else if (solvedState == "unsolved" && activeButton == "unsolved") {
     // UN-SOLVED button
     // Current Topic state: un-solved
     // Current state of button: pressed
