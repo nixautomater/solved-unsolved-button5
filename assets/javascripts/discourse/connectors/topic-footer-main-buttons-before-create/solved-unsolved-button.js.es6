@@ -27,6 +27,11 @@ function solvedButton(component) {
     newState      = "solved";
     buttonState   = "solved";
     queueState    = "t";
+  } else if (solvedState == "unsolved" && answerCount > 0 && activeButton != "solved") {
+    console.log("criteria 1a");
+    newState      = "solved";
+    buttonState   = "solved";
+    queueState    = null;
   } else if (solvedState == "solved" && answerCount == 0 && activeButton == "solved") {
     // SOLVED button
     // Current Topic state: Solved
