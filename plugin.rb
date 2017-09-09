@@ -161,9 +161,10 @@ after_initialize {
 
     def execute
       old_execute
-      if @results.posts.present?
+      posts = @results.posts
+      if posts.present?
         if @results.term.match("in:solved")
-          @results.posts = @results.posts.select{ |pst|
+          @results.posts = posts.select{ |pst|
             topic   = pst.topic
             s_state = topic.custom_fields["solved_state"]
             if s_state.blank?
@@ -173,7 +174,7 @@ after_initialize {
             end
           }
         elsif @results.term.match("in:unsolved")
-          @results.posts = @results.posts.select{ |pst|
+          @results.posts = posts.select{ |pst|
             topic   = pst.topic
             s_state = topic.custom_fields["solved_state"]
             if s_state.blank?
