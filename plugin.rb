@@ -156,6 +156,38 @@ after_initialize {
 
   require_dependency 'search'
 
+  class ::Search
+    alias_method :old_execute, :execute
+
+    def execute
+      old_execute
+      if @results.posts.present?
+        if @results.term.match("in:solved")
+          @results.posts = @results.posts.select{ |pst|
+            topic   = pst.topic
+            s_state = topic.custom_fields["solved_state"]
+            if s_state.blank?
+              !topic.custom_fields["accepted_answer_post_ids"].blank?
+            else
+              s_state == "solved"
+            end
+          }
+        elsif @results.term.match("in:unsolved")
+          @results.posts = @results.posts.select{ |pst|
+            topic   = pst.topic
+            s_state = topic.custom_fields["solved_state"]
+            if s_state.blank?
+              topic.custom_fields["accepted_answer_post_ids"].blank?
+            else
+              s_state != "solved"
+            end
+          }
+        end
+      end
+      @results
+    end
+  end
+
   if Search.respond_to? :advanced_filter
     Search.advanced_filter(/in:solved/) do |posts|
       posts.where(::MmnSolvedCustomHelper.topic_custom_query)

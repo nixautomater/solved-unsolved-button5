@@ -34,10 +34,17 @@ export default {
       api.modifyClass('component:topic-list-item', {
         classNameBindings: [':topic-list-item', 'unboundClassNames', 'visited', 'testClass'],
         testClass: function(solvedState) {
-          if (solvedState == "solved") {
-            return "test-solved";
+          const params = new URL(window.location.href).searchParams;
+          if (params.get("solved")) {
+            if (params.get("solved") == "yes") {
+              return solvedState == "solved" ? "" : "hidden";
+            } else if (params.get("solved") == "no") {
+              return solvedState == "solved" ? "hidden" : "";
+            } else {
+              return "";
+            }
           } else {
-            return "test-unsolved";
+            return "";
           }
         }.property("topic.solved_state")
       });
