@@ -31,6 +31,17 @@ export default {
     });
 
     withPluginApi('0.1', api => {
+      api.modifyClass('component:topic-list-item', {
+        classNameBindings: [':topic-list-item', 'unboundClassNames', 'visited', 'testClass'],
+        testClass: function(solvedState) {
+          if (solvedState == "solved") {
+            return "test-solved";
+          } else {
+            return "test-unsolved";
+          }
+        }.property("topic.solved_state")
+      });
+
       const currentUser = api.getCurrentUser();
 
       if (currentUser) {
