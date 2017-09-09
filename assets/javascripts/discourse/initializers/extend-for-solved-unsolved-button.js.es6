@@ -34,6 +34,7 @@ export default {
       api.modifyClass('component:topic-list-item', {
         classNameBindings: [':topic-list-item', 'unboundClassNames', 'visited', 'testClass'],
         testClass: function(solvedState) {
+          console.log("solvedState: " + solvedState);
           const params = new URL(window.location.href).searchParams;
           if (params.get("solved")) {
             if (params.get("solved") == "yes") {

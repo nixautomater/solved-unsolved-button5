@@ -188,6 +188,11 @@ after_initialize {
     end
   end
 
+  require_dependency 'search/grouped_search_results'
+  class ::Search::GroupedSearchResults
+    attr_accessor :posts
+  end
+
   if Search.respond_to? :advanced_filter
     Search.advanced_filter(/in:solved/) do |posts|
       posts.where(::MmnSolvedCustomHelper.topic_custom_query)
