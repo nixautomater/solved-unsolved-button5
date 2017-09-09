@@ -31,25 +31,25 @@ export default {
     });
 
     withPluginApi('0.1', api => {
-      api.modifyClass('component:topic-list-item', {
-        classNameBindings: [':topic-list-item', 'unboundClassNames', 'visited', 'testClass'],
-        testClass: function() {
-          const solvedState = this.get("topic.solved_state");
-          console.log("solvedState: " + solvedState);
-          const params = new URL(window.location.href).searchParams;
-          if (params.get("solved")) {
-            if (params.get("solved") == "yes") {
-              return solvedState == "solved" ? "" : "hidden";
-            } else if (params.get("solved") == "no") {
-              return solvedState == "solved" ? "hidden" : "";
-            } else {
-              return "";
-            }
-          } else {
-            return "";
-          }
-        }.property("topic.solved_state")
-      });
+      // api.modifyClass('component:topic-list-item', {
+      //   classNameBindings: [':topic-list-item', 'unboundClassNames', 'visited', 'testClass'],
+      //   testClass: function() {
+      //     const solvedState = this.get("topic.solved_state");
+      //     console.log("solvedState: " + solvedState);
+      //     const params = new URL(window.location.href).searchParams;
+      //     if (params.get("solved")) {
+      //       if (params.get("solved") == "yes") {
+      //         return solvedState == "solved" ? "" : "hidden";
+      //       } else if (params.get("solved") == "no") {
+      //         return solvedState == "solved" ? "hidden" : "";
+      //       } else {
+      //         return "";
+      //       }
+      //     } else {
+      //       return "";
+      //     }
+      //   }.property("topic.solved_state")
+      // });
 
       const currentUser = api.getCurrentUser();
 

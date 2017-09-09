@@ -1,6 +1,6 @@
 # name: discourse-solved-unsolved-button
 # about: Add solved and unsolved button to topic on Discourse
-# version: 0.3
+# version: 0.4
 # authors: Muhlis Budi Cahyono (muhlisbc@gmail.com)
 # url: http://git.dev.abylina.com/momon/discourse-solved-unsolved-button
 
@@ -149,50 +149,64 @@ after_initialize {
     end
 
     def self.topic_custom_query(is_not = "")
-      #{}"topics.id #{is_not} IN (SELECT tc.topic_id FROM topic_custom_fields tc WHERE tc.name = 'solved_state' AND tc.value = 'solved' OR ((tc.name = 'solved_state' AND tc.value IS NULL) AND (tc.name = 'accepted_answer_post_ids' AND tc.value IS NOT NULL)))"
-      "topics.id #{is_not} IN (SELECT tc.topic_id FROM topic_custom_fields tc WHERE (tc.name = 'solved_state' AND tc.value = 'solved') OR (tc.name = 'accepted_answer_post_ids' AND tc.value IS NOT NULL))"
+      #"topics.id #{is_not} IN (SELECT tc.topic_id FROM topic_custom_fields tc WHERE (tc.name = 'solved_state' AND tc.value = 'solved') OR (tc.name = 'accepted_answer_post_ids' AND tc.value IS NOT NULL))"
+      q = <<SQL
+        topics.id #{is_not} IN (
+          SELECT tc.topic_id FROM topic_custom_fields tc
+          WHERE (tc.name = 'solved_state' AND tc.value = 'solved')
+          OR
+          (
+            tc.name = 'accepted_answer_post_ids' AND tc.value IS NOT NULL
+            AND
+            tc.topic_id
+            NOT IN
+              (SELECT tc2.topic_id FROM topic_custom_fields tc2 WHERE (tc2.name = 'solved_state' AND tc2.value = 'unsolved'))
+          )
+        )
+      SQL
+      q
     end
   end
 
-  require_dependency 'search'
+  # require_dependency 'search'
 
-  class ::Search
-    alias_method :old_execute, :execute
+  # class ::Search
+  #   alias_method :old_execute, :execute
 
-    def execute
-      old_execute
-      posts = @results.posts
-      if posts.present?
-        if @results.term.match("in:solved")
-          @results.posts = posts.select{ |pst|
-            topic   = pst.topic
-            s_state = topic.custom_fields["solved_state"]
-            if s_state.blank?
-              !topic.custom_fields["accepted_answer_post_ids"].blank?
-            else
-              s_state == "solved"
-            end
-          }
-        elsif @results.term.match("in:unsolved")
-          @results.posts = posts.select{ |pst|
-            topic   = pst.topic
-            s_state = topic.custom_fields["solved_state"]
-            if s_state.blank?
-              topic.custom_fields["accepted_answer_post_ids"].blank?
-            else
-              s_state != "solved"
-            end
-          }
-        end
-      end
-      @results
-    end
-  end
+  #   def execute
+  #     old_execute
+  #     posts = @results.posts
+  #     if posts.present?
+  #       if @results.term.match("in:solved")
+  #         @results.posts = posts.select{ |pst|
+  #           topic   = pst.topic
+  #           s_state = topic.custom_fields["solved_state"]
+  #           if s_state.blank?
+  #             !topic.custom_fields["accepted_answer_post_ids"].blank?
+  #           else
+  #             s_state == "solved"
+  #           end
+  #         }
+  #       elsif @results.term.match("in:unsolved")
+  #         @results.posts = posts.select{ |pst|
+  #           topic   = pst.topic
+  #           s_state = topic.custom_fields["solved_state"]
+  #           if s_state.blank?
+  #             topic.custom_fields["accepted_answer_post_ids"].blank?
+  #           else
+  #             s_state != "solved"
+  #           end
+  #         }
+  #       end
+  #     end
+  #     @results
+  #   end
+  # end
 
-  require_dependency 'search/grouped_search_results'
-  class ::Search::GroupedSearchResults
-    attr_accessor :posts
-  end
+  # require_dependency 'search/grouped_search_results'
+  # class ::Search::GroupedSearchResults
+  #   attr_accessor :posts
+  # end
 
   if Search.respond_to? :advanced_filter
     Search.advanced_filter(/in:solved/) do |posts|
