@@ -33,7 +33,8 @@ export default {
     withPluginApi('0.1', api => {
       api.modifyClass('component:topic-list-item', {
         classNameBindings: [':topic-list-item', 'unboundClassNames', 'visited', 'testClass'],
-        testClass: function(solvedState) {
+        testClass: function() {
+          const solvedState = this.get("topic.solved_state");
           console.log("solvedState: " + solvedState);
           const params = new URL(window.location.href).searchParams;
           if (params.get("solved")) {
