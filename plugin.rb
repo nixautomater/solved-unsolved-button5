@@ -118,7 +118,6 @@ after_initialize {
 
     def button_state(button)
       {
-        #pressed: object.topic.custom_fields["mmn_button_#{button}_state"],
         can_click: scope.mmn_queue_crit?(object.topic, button)
       }
     end
@@ -167,45 +166,7 @@ after_initialize {
     end
   end
 
-  # require_dependency 'search'
-
-  # class ::Search
-  #   alias_method :old_execute, :execute
-
-  #   def execute
-  #     old_execute
-  #     posts = @results.posts
-  #     if posts.present?
-  #       if @results.term.match("in:solved")
-  #         @results.posts = posts.select{ |pst|
-  #           topic   = pst.topic
-  #           s_state = topic.custom_fields["solved_state"]
-  #           if s_state.blank?
-  #             !topic.custom_fields["accepted_answer_post_ids"].blank?
-  #           else
-  #             s_state == "solved"
-  #           end
-  #         }
-  #       elsif @results.term.match("in:unsolved")
-  #         @results.posts = posts.select{ |pst|
-  #           topic   = pst.topic
-  #           s_state = topic.custom_fields["solved_state"]
-  #           if s_state.blank?
-  #             topic.custom_fields["accepted_answer_post_ids"].blank?
-  #           else
-  #             s_state != "solved"
-  #           end
-  #         }
-  #       end
-  #     end
-  #     @results
-  #   end
-  # end
-
-  # require_dependency 'search/grouped_search_results'
-  # class ::Search::GroupedSearchResults
-  #   attr_accessor :posts
-  # end
+  require_dependency 'search'
 
   if Search.respond_to? :advanced_filter
     Search.advanced_filter(/in:solved/) do |posts|
