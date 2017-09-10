@@ -23,7 +23,7 @@ after_initialize {
       state       = params["state"]
       guardian.ensure_mmn_process_crit!(state)
 
-      topic_ids   = TopicCustomField.where(name: "mmn_#{state}_queue_state", value: "t").pluck(:topic_id)
+      topic_ids   = TopicCustomField.where(name: "mmn_queue_state", value: state).pluck(:topic_id)
       topics      = Topic.where(id: topic_ids).includes(:user).references(:user)
       render_json_dump(serialize_data(topics, TopicListItemSerializer, scope: guardian, root: false))
     end
@@ -51,7 +51,7 @@ after_initialize {
 
       guardian.ensure_mmn_queue_crit!(topic, button)
 
-      ["solved_state", "mmn_button_active", "mmn_#{button}_queue_state"].each do |f|
+      ["solved_state", "mmn_button_active", "mmn_queue_state"].each do |f|
         topic.custom_fields[f] = params[f]
       end
       topic.save

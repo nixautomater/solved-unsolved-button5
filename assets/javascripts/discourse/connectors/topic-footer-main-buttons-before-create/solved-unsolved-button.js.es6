@@ -26,7 +26,7 @@ function solvedButton(component) {
     console.log("criteria 1");
     newState      = "solved";
     buttonState   = "solved";
-    queueState    = "t";
+    queueState    = "solved";
   } else if (solvedState == "unsolved" && answerCount > 0 && activeButton != "solved") {
     console.log("criteria 1a");
     newState      = "solved";
@@ -89,7 +89,7 @@ function solvedButton(component) {
       id: topic.get("id"),
       solved_state: newState,
       mmn_button_active: buttonState,
-      mmn_solved_queue_state: queueState
+      mmn_queue_state: queueState
     }
   }).catch(popupAjaxError);
 
@@ -120,7 +120,7 @@ function unsolvedButton(component) {
     console.log("criteria 1");
     newState      = "unsolved";
     buttonState   = "unsolved";
-    queueState    = "t";
+    queueState    = "unsolved";
   } else if (solvedState == "unsolved" && activeButton == "unsolved") {
     // UN-SOLVED button
     // Current Topic state: un-solved
@@ -144,7 +144,7 @@ function unsolvedButton(component) {
     console.log("criteria 3");
     newState      = "unsolved";
     buttonState   = "unsolved";
-    queueState    = "t";
+    queueState    = "unsolved";
   } else {
     // If doesn't meet any criteria
     console.log("unsolved: doesn't meet any criteria");
@@ -163,7 +163,7 @@ function unsolvedButton(component) {
       id: topic.get("id"),
       solved_state: newState,
       mmn_button_active: buttonState,
-      mmn_unsolved_queue_state: queueState
+      mmn_queue_state: queueState
     }
   }).catch(popupAjaxError);
 
