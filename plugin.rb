@@ -24,7 +24,7 @@ after_initialize {
       guardian.ensure_mmn_process_crit!(state)
 
       topic_ids   = TopicCustomField.where(name: "mmn_queue_state", value: state).pluck(:topic_id)
-      topics      = Topic.where(id: topic_ids).includes(:user).references(:user)
+      topics      = Topic.where(id: topic_ids).order(:bumped_at => :desc).includes(:user).references(:user)
       render_json_dump(serialize_data(topics, TopicListItemSerializer, scope: guardian, root: false))
     end
 
