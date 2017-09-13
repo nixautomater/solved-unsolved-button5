@@ -15,7 +15,7 @@ function solvedButton(component) {
 
   let newState, buttonState, queueState;
 
-  if (solvedState == "unsolved" && answerCount == 0 && activeButton != "solved") {
+  if (solvedState != "solved" && answerCount == 0 && activeButton != "solved") {
     // Current Topic state: unsolved
     // Number of solutions in the topic: 0
     // Current state of button: not pressed
@@ -27,7 +27,7 @@ function solvedButton(component) {
     newState      = "solved";
     buttonState   = "solved";
     queueState    = "solved";
-  } else if (solvedState == "unsolved" && answerCount > 0 && activeButton != "solved") {
+  } else if (solvedState != "solved" && answerCount > 0 && activeButton != "solved") {
     console.log("criteria 1a");
     newState      = "solved";
     buttonState   = "solved";
@@ -42,7 +42,7 @@ function solvedButton(component) {
     // AND: topic should NOT be there in the “solved-queue”
 
     console.log("criteria 2");
-    newState      = "unsolved";
+    newState      = null;
     buttonState   = null;
     queueState    = null;
   } else if (solvedState == "solved" && answerCount > 0 && activeButton != "solved") {
@@ -68,7 +68,7 @@ function solvedButton(component) {
     // AND: topic should NOT be there in the “solved-queue”
 
     console.log("criteria 4");
-    newState      = "solved";
+    newState      = null;
     buttonState   = null;
     queueState    = null;
   } else {
@@ -109,7 +109,7 @@ function unsolvedButton(component) {
 
   let newState, buttonState, queueState;
 
-  if (solvedState == "unsolved" && activeButton != "unsolved") {
+  if (solvedState != "solved" && activeButton != "unsolved") {
     // UN-SOLVED button
     // Current Topic state: un-solved
     // Current state of button: not-pressed
@@ -121,7 +121,7 @@ function unsolvedButton(component) {
     newState      = "unsolved";
     buttonState   = "unsolved";
     queueState    = "unsolved";
-  } else if (solvedState == "unsolved" && activeButton == "unsolved") {
+  } else if (solvedState != "solved" && activeButton == "unsolved") {
     // UN-SOLVED button
     // Current Topic state: un-solved
     // Current state of button: pressed
@@ -130,7 +130,7 @@ function unsolvedButton(component) {
     // AND: topic should NOT be there in “Un-Solved-queue”
 
     console.log("criteria 2");
-    newState      = "unsolved";
+    newState      = null;
     buttonState   = null;
     queueState    = null;
   } else if (solvedState == "solved" && activeButton != "unsolved") {
