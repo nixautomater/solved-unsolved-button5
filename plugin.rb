@@ -123,7 +123,8 @@ after_initialize {
     end
 
     def solved_show_button
-      !solved_state.nil? || scope.allow_accepted_answers_on_category?(object.topic.category_id)
+      #!solved_state.nil? || scope.allow_accepted_answers_on_category?(object.topic.category_id)
+      scope.allow_accepted_answers_on_category?(object.topic.category_id)
     end
   end
 
