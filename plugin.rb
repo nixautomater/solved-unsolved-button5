@@ -1,6 +1,6 @@
 # name: discourse-solved-unsolved-button
 # about: Add solved and unsolved button to topic on Discourse
-# version: 0.4
+# version: 0.5
 # authors: Muhlis Budi Cahyono (muhlisbc@gmail.com)
 # url: http://git.dev.abylina.com/momon/discourse-solved-unsolved-button
 

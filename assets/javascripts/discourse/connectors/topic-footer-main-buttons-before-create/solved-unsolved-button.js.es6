@@ -4,14 +4,14 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 function solvedButton(component) {
   const {topic} = component.args;
   const button = topic.get("mmn_buttons.solved");
-  console.log(`solved.can_click: ${button.can_click}`);
+  //console.log(`solved.can_click: ${button.can_click}`);
   if (!button.can_click) { return; }
 
   const solvedState   = topic.get("solved_state");
   const answerCount   = topic.get("accepted_answers") ? topic.get("accepted_answers").length : 0;
   const activeButton  = topic.get("mmn_buttons.active");
 
-  console.log({solvedState, answerCount, activeButton});
+  //console.log({solvedState, answerCount, activeButton});
 
   let newState, buttonState, queueState;
 
@@ -23,12 +23,12 @@ function solvedButton(component) {
     // New state of topic: solved
     // AND: topic should be sent to the “Solved-queue”
 
-    console.log("criteria 1");
+    //console.log("criteria 1");
     newState      = "solved";
     buttonState   = "solved";
     queueState    = "solved";
   } else if (solvedState != "solved" && answerCount > 0 && activeButton != "solved") {
-    console.log("criteria 1a");
+    //console.log("criteria 1a");
     newState      = "solved";
     buttonState   = "solved";
     queueState    = null;
@@ -41,7 +41,7 @@ function solvedButton(component) {
     // New state of topic: Un-Solved
     // AND: topic should NOT be there in the “solved-queue”
 
-    console.log("criteria 2");
+    //console.log("criteria 2");
     newState      = null;
     buttonState   = null;
     queueState    = null;
@@ -54,7 +54,7 @@ function solvedButton(component) {
     // New state of topic: Solved
     // AND: topic should NOT be there in the “solved-queue”
 
-    console.log("criteria 3");
+    //console.log("criteria 3");
     newState      = "solved";
     buttonState   = "solved";
     queueState    = null;
@@ -67,13 +67,13 @@ function solvedButton(component) {
     // New state of topic: Solved
     // AND: topic should NOT be there in the “solved-queue”
 
-    console.log("criteria 4");
+    //console.log("criteria 4");
     newState      = null;
     buttonState   = null;
     queueState    = null;
   } else {
     // If doesn't meet any criteria
-    console.log("solved: doesn't meet any criteria");
+    //console.log("solved: doesn't meet any criteria");
     return;
   }
 
@@ -99,13 +99,13 @@ function solvedButton(component) {
 function unsolvedButton(component) {
   const {topic} = component.args;
   const button = topic.get("mmn_buttons.unsolved");
-  console.log(`unsolved.can_click: ${button.can_click}`);
+  //console.log(`unsolved.can_click: ${button.can_click}`);
   if (!button.can_click) { return; }
 
   const solvedState   = topic.get("solved_state");
   const activeButton  = topic.get("mmn_buttons.active");
 
-  console.log({solvedState, activeButton});
+  //console.log({solvedState, activeButton});
 
   let newState, buttonState, queueState;
 
@@ -117,7 +117,7 @@ function unsolvedButton(component) {
     // New state of topic: un-solved
     // AND: topic should be sent to the “Un-Solved-queue”
 
-    console.log("criteria 1");
+    //console.log("criteria 1");
     newState      = "unsolved";
     buttonState   = "unsolved";
     queueState    = "unsolved";
@@ -129,7 +129,7 @@ function unsolvedButton(component) {
     // New state of topic: un-solved
     // AND: topic should NOT be there in “Un-Solved-queue”
 
-    console.log("criteria 2");
+    //console.log("criteria 2");
     newState      = null;
     buttonState   = null;
     queueState    = null;
@@ -141,13 +141,13 @@ function unsolvedButton(component) {
     // New state of topic: un-solved
     // AND: topic should be sent to “Un-Solved-queue”
 
-    console.log("criteria 3");
+    //console.log("criteria 3");
     newState      = "unsolved";
     buttonState   = "unsolved";
     queueState    = "unsolved";
   } else {
     // If doesn't meet any criteria
-    console.log("unsolved: doesn't meet any criteria");
+    //console.log("unsolved: doesn't meet any criteria");
     return;
   }
 
@@ -194,6 +194,8 @@ function setClasses(topic, component) {
   const unsolvedClass = button == "unsolved" ? "btn-danger" : "";
   component.set("solvedClass", solvedClass);
   component.set("unsolvedClass", unsolvedClass);
+  component.set("solvedCantClick", !topic.get("mmn_buttons.solved.can_click"));
+  component.set("unsolvedCantClick", !topic.get("mmn_buttons.unsolved.can_click"));
 }
 
 export default {
