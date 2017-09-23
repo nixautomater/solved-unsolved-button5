@@ -1,6 +1,6 @@
 en:
   site_settings:
-    solved_group_name_can_queue_solved: "Allow this group to click SOLVED button"
-    solved_group_name_can_queue_unsolved: "Allow this group to click UNSOLVED button"
-    solved_group_name_can_process_solved: "Allow this group to view SOLVED queue"
-    solved_group_name_can_process_unsolved: "Allow this group to view UNSOLVED queue"
+    solved_group_name_can_queue_solved: "Group that can click solved btn"
+    solved_group_name_can_queue_unsolved: "Group that can click unsolved btn"
+    solved_group_name_can_process_solved: "Group that can check solved queue"
+    solved_group_name_can_process_unsolved: "Group that can check unsolved queue"
