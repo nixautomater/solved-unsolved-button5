@@ -23,3 +23,9 @@ $success: green;
     display: none !important;
   }
 }
+
+.mobile-view #topic-footer-buttons {
+  .btn[disabled]:hover, .btn.disabled:hover {
+    color: unset !important;
+  }
+}
